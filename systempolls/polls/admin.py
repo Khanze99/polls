@@ -14,15 +14,24 @@ class ChoiceInline(admin.TabularInline):
     model = Choice
 
 
-class TextAnswerInline(admin.TabularInline):
-    model = TextAnswer
-
-
 @admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
-
     inlines = (QuestionInline,)
 
 
-admin.site.register(Question)
-admin.site.register(Choice)
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        model = self.model
+        obj = self.get_object(request, object_id)
+
+        if obj.type == 'sc' or obj.type == 'mc':
+            self.inlines = [ChoiceInline, ]
+        
+        return super(QuestionAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
+
+
+admin.site.register(TextAnswer)
+admin.site.register(ChoiceAnswer)
+admin.site.register(MultiChoiceAnswer)
