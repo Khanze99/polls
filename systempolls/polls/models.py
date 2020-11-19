@@ -39,16 +39,16 @@ class Question(models.Model):
 
 
 class Choice(models.Model):
-    text = models.CharField(max_length=300, verbose_name='Text choice')
+    name = models.CharField(max_length=300, verbose_name='Text choice')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
 
     def __str__(self):
-        return self.text
+        return self.name
 
 
 class TextAnswer(models.Model):
     text = models.TextField(verbose_name='Answer question')
-    question = models.OneToOneField(Question, on_delete=models.CASCADE)
+    question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name='text_answer')
 
 
 class ChoiceAnswer(models.Model):

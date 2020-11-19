@@ -3,15 +3,16 @@ from rest_framework.serializers import ModelSerializer
 from .models import Poll, Question, Choice
 
 
-class ChocieSerializer(ModelSerializer):
+class ChoiceSerializer(ModelSerializer):
 
     class Meta:
         model = Choice
-        fields = ('id', 'text')
+        fields = ('id', 'name')
 
 
 class QuestionSerializer(ModelSerializer):
-    choices = ChocieSerializer(many=True, read_only=True)
+
+    choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question
