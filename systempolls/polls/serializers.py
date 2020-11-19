@@ -7,7 +7,7 @@ class ChocieSerializer(ModelSerializer):
 
     class Meta:
         model = Choice
-        fields = ('text',)
+        fields = ('id', 'text')
 
 
 class QuestionSerializer(ModelSerializer):
@@ -15,7 +15,7 @@ class QuestionSerializer(ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('text', 'type', 'choices')
+        fields = ('id', 'text', 'type', 'choices')
 
 
 class PollSerializer(ModelSerializer):
