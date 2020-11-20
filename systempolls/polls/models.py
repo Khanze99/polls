@@ -37,6 +37,9 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
+    def get_selected_answers(self):
+        return [selected_answer.choice for selected_answer in self.selected_answers.all()]
+
 
 class Choice(models.Model):
     name = models.CharField(max_length=300, verbose_name='Text choice')
@@ -57,6 +60,6 @@ class ChoiceAnswer(models.Model):
 
 
 class MultiChoiceAnswer(models.Model):
-    question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name='selected_answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='selected_answers')
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
 
