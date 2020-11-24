@@ -2,18 +2,18 @@ from collections import OrderedDict
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Poll
-from .serializers import PollSerializer
+from .models import Poll, CompletedPoll
+from .serializers import PollSerializer, CompletedPollSerializer
 
 
-def get_completed_polls(uid: int) -> list:
+def get_completed_polls(uid):
     """ Получаем пройденные опросы """
-    result = []
+    serializer = CompletedPollSerializer(CompletedPoll.objects.filter(user__id=uid), many=True).data
 
-    return result
+    return serializer
 
 
-def get_result_poll(uid) -> list:
+def get_result_poll(uid):
 
     if uid:
         result = get_completed_polls(uid)
