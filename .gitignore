@@ -3,3 +3,4 @@ systempolls/systempolls/.env
 .idea
 **/__pycache__/**
 **/*.pyc
+**/static

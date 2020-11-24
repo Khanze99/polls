@@ -1,6 +1,27 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import Poll, Question, Choice
+from .models import Poll, Question, Choice, TextAnswer, ChoiceAnswer, MultiChoiceAnswer
+
+
+class ChoiceAnswerSerializer(ModelSerializer):
+
+    class Meta:
+        model = ChoiceAnswer
+        fields = '__all__'
+
+
+class MultiChoiceAnswerSerializer(ModelSerializer):
+
+    class Meta:
+        model = MultiChoiceAnswer
+        fields = '__all__'
+
+
+class TextAnswerSerializer(ModelSerializer):
+
+    class Meta:
+        model = TextAnswer
+        fields = '__all__'
 
 
 class ChoiceSerializer(ModelSerializer):
@@ -26,3 +47,6 @@ class PollSerializer(ModelSerializer):
     class Meta:
         model = Poll
         fields = ('id', 'name', 'end_date', 'questions')
+
+
+
