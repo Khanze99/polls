@@ -1,0 +1,43 @@
+[{
+    "poll_id": 1,
+    "uid": 1,
+    "questions": [
+        {
+            "question_id": 1,
+            "type": "text",
+            "answer": "test"
+        },
+        {
+            "question_id": 2,
+            "type": "sc",
+            "answer": 1
+        },
+        {
+            "question_id": 2,
+            "type": "mc",
+            "answer": [2, 3, 4]
+        }
+    ]
+},
+{
+    "poll_id": 1,
+    "uid": null,
+    "questions": [
+        {
+            "question_id": 1,
+            "type": "text",
+            "answer": "test"
+        },
+        {
+            "question_id": 2,
+            "type": "sc",
+            "answer": 1
+        },
+        {
+            "question_id": 2,
+            "type": "mc",
+            "answer": [2, 3, 4]
+        }
+    ]
+}
+]

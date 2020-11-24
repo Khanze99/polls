@@ -1,9 +1,7 @@
 from django.contrib import admin
 
 
-from .models import Poll, Question, \
-    ChoiceAnswer, TextAnswer,\
-    MultiChoiceAnswer, Choice
+from .models import Poll, Question, Choice
 
 
 class QuestionInline(admin.TabularInline):
@@ -31,7 +29,3 @@ class QuestionAdmin(admin.ModelAdmin):
         
         return super(QuestionAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
-
-admin.site.register(TextAnswer)
-admin.site.register(ChoiceAnswer)
-admin.site.register(MultiChoiceAnswer)

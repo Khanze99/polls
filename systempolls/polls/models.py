@@ -7,7 +7,6 @@ class Poll(models.Model):
     name = models.CharField(max_length=511)
     start_date = models.DateTimeField(editable=False, auto_now_add=timezone.now)
     end_date = models.DateTimeField()
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='completed_polls')
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
@@ -37,9 +36,6 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
-    def get_selected_answers(self):
-        return [selected_answer.choice for selected_answer in self.selected_answers.all()]
-
 
 class Choice(models.Model):
     name = models.CharField(max_length=300, verbose_name='Text choice')
@@ -49,17 +45,18 @@ class Choice(models.Model):
         return self.name
 
 
-class TextAnswer(models.Model):
-    text = models.TextField(verbose_name='Answer question')
-    question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name='text_answer')
+class CompletedPoll(models.Model):
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='completed_polls')
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name='completed_polls')
+    completed_date = models.DateTimeField(editable=False, auto_now_add=timezone.now)
 
 
-class ChoiceAnswer(models.Model):
-    question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name='selected_answer')
-    choice = models.OneToOneField(Choice, on_delete=models.CASCADE)
+class CompletedQuestion(models.Model):
+    completed_poll = models.ForeignKey(CompletedPoll, on_delete=models.CASCADE, related_name='completed_questions')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='completed_question')
 
 
-class MultiChoiceAnswer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='selected_answers')
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-
+class Answer(models.Model):
+    completed_question = models.ForeignKey(CompletedQuestion, on_delete=models.CASCADE, related_name='answers')
+    choice = models.ForeignKey(Choice, null=True, blank=True, on_delete=models.CASCADE)
+    text = models.TextField(null=True, blank=True)
