@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import CompletedPoll, CompletedQuestion, Answer, Poll, Choice, Question
+from .models import CompletedPoll, Poll, Choice, Question
 from .services import get_result_poll
 
 
@@ -19,6 +19,7 @@ class PollView(APIView):
         return Response(result)
 
     def post(self, request) -> Response:
+        completed_polls = []
         data = request.data
 
         questions = data['questions']
@@ -33,8 +34,6 @@ class PollView(APIView):
         except ObjectDoesNotExist:
             user = None
 
-        completed_poll = CompletedPoll.objects.create(poll=poll, user=user)
-
         for question in questions:
             try:
                 q = Question.objects.get(id=question['question_id'])
@@ -44,10 +43,8 @@ class PollView(APIView):
             type_question = question['type']
             answer = question['answer']
 
-            completed_question = CompletedQuestion.objects.create(completed_poll=completed_poll, question=q)
-
             if type_question == 'text':
-                Answer.objects.create(completed_question=completed_question, text=answer)
+                completed_polls.append(CompletedPoll(user=user, poll=poll, question=q, text=answer))
 
             if type_question == 'sc':
                 try:
@@ -55,11 +52,13 @@ class PollView(APIView):
                 except ObjectDoesNotExist:
                     return Response({'message': 'invalid data'}, status=400)
 
-                Answer.objects.create(completed_question=completed_question, choice=choice)
+                completed_polls.append(CompletedPoll(user=user, poll=poll, question=q, choice=choice))
 
             if type_question == 'mc':
                 choices = Choice.objects.filter(id__in=answer)
                 for choice in choices:
-                    Answer.objects.create(completed_question=completed_question, choice=choice)
+                    completed_polls.append(CompletedPoll(user=user, poll=poll, question=q, choice=choice))
+
+        CompletedPoll.objects.bulk_create(completed_polls)
 
         return Response({"status": 200})

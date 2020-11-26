@@ -7,7 +7,7 @@ class Poll(models.Model):
     name = models.CharField(max_length=511)
     start_date = models.DateTimeField(editable=False, auto_now_add=timezone.now)
     end_date = models.DateTimeField()
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -15,8 +15,8 @@ class Poll(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
 
-        if timezone.now() < self.end_date:
-            self.is_active = True
+        if timezone.now() > self.end_date:
+            self.is_active = False
 
         super(Poll, self).save(force_insert=force_insert, force_update=force_update,
                                using=using, update_fields=update_fields)
@@ -49,14 +49,6 @@ class CompletedPoll(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='completed_polls')
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name='completed_polls')
     completed_date = models.DateTimeField(editable=False, auto_now_add=timezone.now)
-
-
-class CompletedQuestion(models.Model):
-    completed_poll = models.ForeignKey(CompletedPoll, on_delete=models.CASCADE, related_name='completed_questions')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='completed_question')
-
-
-class Answer(models.Model):
-    completed_question = models.ForeignKey(CompletedQuestion, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, null=True, blank=True, on_delete=models.CASCADE, related_name='completed_question')
     choice = models.ForeignKey(Choice, null=True, blank=True, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True)
