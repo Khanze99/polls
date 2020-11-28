@@ -7,13 +7,9 @@ from .serializers import PollSerializer, CompletedPollSerializer, QuestionSerial
 
 def get_completed_polls(uid):
     """ Получаем пройденные опросы """
-    polls_ids = CompletedPoll.objects.distinct('poll_id').filter(user__id=uid).values_list('poll_id')
-    result = []
-    for poll_id in polls_ids:
-        # completed_polls = CompletedPoll.objects.select_related('poll', 'user', 'question', 'choice').filter(poll_id=poll_id)
-        completed_polls = CompletedPoll.objects.filter(poll_id=poll_id)
-        completed_polls_serializer = CompletedPollSerializer(completed_polls, many=True)
-        result.append(completed_polls_serializer.data)
+
+    completed_polls = CompletedPoll.objects.filter(user__id=uid)
+    result = CompletedPollSerializer(completed_polls, many=True).data
 
     return result
 
