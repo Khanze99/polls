@@ -36,10 +36,29 @@ class PollSerializer(ModelSerializer):
         fields = ('id', 'name', 'end_date', 'questions')
 
 
+class PollWithoutQuestionsSerializer(ModelSerializer):
+
+    class Meta:
+        model = Poll
+        fields = '__all__'
+
+
+class QuestionWithoutChoicesSerializer(ModelSerializer):
+
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+
 class CompletedPollSerializer(ModelSerializer):
+
+    user = UserSerializer()
+    poll = PollWithoutQuestionsSerializer()
+    question = QuestionWithoutChoicesSerializer()
+    choice = ChoiceSerializer()
 
     class Meta:
         model = CompletedPoll
-        fields = '__all__'
+        fields = ('user', 'poll', 'question', 'choice', 'text', 'completed_date')
 
 

@@ -2,20 +2,26 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 from .models import Poll, CompletedPoll, Choice, Question
-from .serializers import PollSerializer, CompletedPollSerializer
+from .serializers import PollSerializer, CompletedPollSerializer, QuestionSerializer
 
 
 def get_completed_polls(uid):
     """ Получаем пройденные опросы """
-    serializer = CompletedPollSerializer(CompletedPoll.objects.filter(user__id=uid), many=True).data
+    polls_ids = CompletedPoll.objects.distinct('poll_id').filter(user__id=uid).values_list('poll_id')
+    result = []
+    for poll_id in polls_ids:
+        # completed_polls = CompletedPoll.objects.select_related('poll', 'user', 'question', 'choice').filter(poll_id=poll_id)
+        completed_polls = CompletedPoll.objects.filter(poll_id=poll_id)
+        completed_polls_serializer = CompletedPollSerializer(completed_polls, many=True)
+        result.append(completed_polls_serializer.data)
 
-    return serializer
+    return result
 
 
 def get_result_poll(uid):
-
     if uid:
         result = get_completed_polls(uid)
+
     else:
         result = PollSerializer(Poll.objects.filter(is_active=True), many=True).data
 
