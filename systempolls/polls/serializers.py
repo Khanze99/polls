@@ -37,12 +37,30 @@ class PollSerializer(ModelSerializer):
         fields = ('id', 'name', 'end_date', 'questions')
 
 
-class GetCompletedPollSerializer(ModelSerializer):
+class CompletedPollSerializer(ModelSerializer):
+    choice = ChoiceSerializer(read_only=True)
 
     class Meta:
         model = CompletedPoll
-        fields = ('poll', 'question', 'choice', 'text', 'completed_date')
-        depth = 1
+        fields = ('id', 'completed_date', 'text', 'choice')
+
+
+class QuestionAnswerSerializer(ModelSerializer):
+
+    completed_question = CompletedPollSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Question
+        fields = ('id', 'text', 'type', 'completed_question')
+
+
+class GetPollSerializer(ModelSerializer):
+
+    questions = QuestionAnswerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Poll
+        fields = ('name', 'questions')
 
 
 class PostCompletedPollSerializer(ModelSerializer):

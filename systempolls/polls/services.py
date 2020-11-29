@@ -1,12 +1,14 @@
 from .models import Poll, CompletedPoll
-from .serializers import PollSerializer, GetCompletedPollSerializer, PostCompletedPollSerializer
+from .serializers import PollSerializer, GetPollSerializer, PostCompletedPollSerializer
 
 
 def get_completed_polls(uid):
     """ Получаем пройденные опросы """
 
-    completed_polls = CompletedPoll.objects.filter(user__id=uid)
-    result = GetCompletedPollSerializer(completed_polls, many=True).data
+    completed_polls = CompletedPoll.objects.filter(user__id=uid).distinct('poll_id')
+    poll_ids = [cp.poll_id for cp in completed_polls]
+    polls = Poll.objects.filter(id__in=poll_ids)
+    result = GetPollSerializer(polls, many=True).data
 
     return result
 
