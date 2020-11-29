@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from django.contrib.auth.models import User
 
 from .models import Poll, Question, Choice, CompletedPoll
+from .helpers import get_or_none
 
 
 class UserSerializer(ModelSerializer):
@@ -50,7 +51,7 @@ class QuestionWithoutChoicesSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CompletedPollSerializer(ModelSerializer):
+class GetCompletedPollSerializer(ModelSerializer):
 
     user = UserSerializer()
     poll = PollWithoutQuestionsSerializer()
@@ -62,3 +63,33 @@ class CompletedPollSerializer(ModelSerializer):
         fields = ('user', 'poll', 'question', 'choice', 'text', 'completed_date')
 
 
+class PostCompletedPollSerializer(ModelSerializer):
+
+    class Meta:
+        model = CompletedPoll
+        fields = ('user_id', 'poll_id', 'question_id', 'choice_id', 'text', 'completed_date')
+
+    def create(self, validated_data):
+        poll = get_or_none(Poll, id=validated_data['poll_id'])
+        user = get_or_none(User, id=validated_data['user_id'])
+        question = get_or_none(Question, id=validated_data['question_id'])
+
+        text = validated_data['text']
+
+        if isinstance(validated_data['choice_id'], list):
+            completed_polls = []
+            choices = validated_data['choice_id']
+
+            for _choice_id in choices:
+                choice = get_or_none(Choice, id=_choice_id)
+                completed_polls.append(CompletedPoll(poll=poll, user=user,
+                                                     question=question, choice=choice))
+
+            CompletedPoll.objects.bulk_create(completed_polls)
+
+        else:
+            choice = get_or_none(Choice, id=validated_data['choice_id'])
+            CompletedPoll.objects.create(poll=poll, user=user,
+                                         question=question, choice=choice,
+                                         text=text)
+        return CompletedPoll.objects.filter(poll__id=poll.id, user__id=user.id)

@@ -16,9 +16,5 @@ class PollView(APIView):
 
     def post(self, request) -> Response:
         data = request.data
-        flag, error = save_results(data)
-
-        if flag is False:
-            return Response({'error': 'bad data {}'.format(error)}, status=400)
-
+        save_results(data)
         return Response({'status': 'created'}, status=201)

@@ -1,43 +1,24 @@
-[{
-    "poll_id": 1,
-    "uid": 1,
-    "questions": [
-        {
-            "question_id": 1,
-            "type": "text",
-            "answer": "test"
-        },
-        {
-            "question_id": 2,
-            "type": "sc",
-            "answer": 1
-        },
-        {
-            "question_id": 3,
-            "type": "mc",
-            "answer": [2, 3, 4]
-        }
-    ]
-},
-{
-    "poll_id": 1,
-    "uid": null,
-    "questions": [
-        {
-            "question_id": 1,
-            "type": "text",
-            "answer": "test"
-        },
-        {
-            "question_id": 2,
-            "type": "sc",
-            "answer": 1
-        },
-        {
-            "question_id": 2,
-            "type": "mc",
-            "answer": [2, 3, 4]
-        }
-    ]
-}
+[
+    {
+        "poll_id": 1,
+        "user_id": 1,
+        "question_id": 1,
+        "choice_id": null,
+        "text": "Текстовый ответ"
+    },
+
+    {
+        "poll_id": 1,
+        "user_id": 1,
+        "question_id": 2,
+        "choice_id": 1,
+        "text": null
+    },
+    {
+        "poll_id": 1,
+        "user_id": 1,
+        "question_id": 3,
+        "choice_id": [2, 3, 4],
+        "text": null
+    }
 ]
