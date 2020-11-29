@@ -1,7 +1,5 @@
-from django.contrib.auth.models import User
-
-from .models import Poll, CompletedPoll, Choice, Question
-from .serializers import PollSerializer, GetCompletedPollSerializer, QuestionSerializer, PostCompletedPollSerializer
+from .models import Poll, CompletedPoll
+from .serializers import PollSerializer, GetCompletedPollSerializer, PostCompletedPollSerializer
 
 
 def get_completed_polls(uid):
@@ -14,9 +12,9 @@ def get_completed_polls(uid):
 
 
 def get_result_poll(uid):
+
     if uid:
         result = get_completed_polls(uid)
-
     else:
         result = PollSerializer(Poll.objects.filter(is_active=True), many=True).data
 
