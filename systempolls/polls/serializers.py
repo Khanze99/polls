@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
 
 from .models import Poll, Question, Choice, CompletedPoll
@@ -37,30 +37,12 @@ class PollSerializer(ModelSerializer):
         fields = ('id', 'name', 'end_date', 'questions')
 
 
-class PollWithoutQuestionsSerializer(ModelSerializer):
-
-    class Meta:
-        model = Poll
-        fields = '__all__'
-
-
-class QuestionWithoutChoicesSerializer(ModelSerializer):
-
-    class Meta:
-        model = Question
-        fields = '__all__'
-
-
 class GetCompletedPollSerializer(ModelSerializer):
-
-    user = UserSerializer()
-    poll = PollWithoutQuestionsSerializer()
-    question = QuestionWithoutChoicesSerializer()
-    choice = ChoiceSerializer()
 
     class Meta:
         model = CompletedPoll
-        fields = ('user', 'poll', 'question', 'choice', 'text', 'completed_date')
+        fields = ('poll', 'question', 'choice', 'text', 'completed_date')
+        depth = 1
 
 
 class PostCompletedPollSerializer(ModelSerializer):
