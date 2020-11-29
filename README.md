@@ -29,10 +29,3 @@
 ![polls.png](polls.png)
 
 Пример POST запроса: [example_post.json](example_post.json)
-
-
-
-Что осталось сделать?
-
-* api ендпоинт по получению пройденных опросов
-* настройка nginx + gunicorn
