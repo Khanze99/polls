@@ -5,13 +5,6 @@ from .models import Poll, Question, Choice, CompletedPoll
 from .helpers import get_or_none
 
 
-class UserSerializer(ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = '__all__'
-
-
 class ChoiceSerializer(ModelSerializer):
 
     class Meta:
